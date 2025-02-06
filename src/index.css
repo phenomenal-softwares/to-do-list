@@ -92,7 +92,6 @@ form button:hover {
 
 /* Task List Styling */
 ul {
-  list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
@@ -139,7 +138,7 @@ li .task-details {
   color: #555;
 }
 
-li input[type="checkbox"] {
+li .main-task-checkbox {
   margin-bottom: 10px;
   transform: scale(1.2);
   cursor: pointer;

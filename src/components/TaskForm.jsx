@@ -1,17 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const TaskForm = ({ addTask }) => {
-  const [task, setTask] = useState('');
-  const [category, setCategory] = useState('');
-  const [deadline, setDeadline] = useState('');
+  const [action, setAction] = useState('');
+  const [time, setTime] = useState('');
+  const [location, setLocation] = useState('');
+  const [repeatDays, setRepeatDays] = useState(1); // Default value for repeat days
+
+  const actionPlaceholders = [
+    'read three chapters', 'go for a run', 'finish the report', 'cook dinner', 'practice guitar', 
+    'meditate for 20 minutes', 'water the plants', 'call a friend', 'clean the house', 'write in journal', 
+    'learn a new recipe', 'do yoga', 'paint a picture', 'organize the closet', 'plan a trip', 
+    'write a blog post', 'fix the bike', 'study a new language', 'practice coding', 'take photos'
+  ];
+
+  const locationPlaceholders = [
+    'in the living room', 'at the park', 'in my office', 'at the gym', 'on the balcony', 
+    'in the kitchen', 'at the beach', 'in the garden', 'in the cafe', 'on the terrace', 
+    'at the library', 'in the backyard', 'on the rooftop', 'at a friend’s house', 'in the workshop', 
+    'at the lake', 'in the studio', 'in the bedroom', 'on the hiking trail', 'in the reading nook'
+  ];
+
+  const getRandomPlaceholder = (placeholders) => {
+    return placeholders[Math.floor(Math.random() * placeholders.length)];
+  };
+
+  const [actionPlaceholder, setActionPlaceholder] = useState(getRandomPlaceholder(actionPlaceholders));
+  const [locationPlaceholder, setLocationPlaceholder] = useState(getRandomPlaceholder(locationPlaceholders));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActionPlaceholder(getRandomPlaceholder(actionPlaceholders));
+      setLocationPlaceholder(getRandomPlaceholder(locationPlaceholders));
+    }, 10000); // Change placeholder every 10 seconds
+
+    return () => clearInterval(interval);
+  }, [actionPlaceholders, locationPlaceholders]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (task && category) {
-      addTask({ task, category, deadline, completed: false });
-      setTask('');
-      setCategory('');
-      setDeadline('');
+    if (action && time && location) {
+      addTask({ 
+        task: action, 
+        time, 
+        location, 
+        repeatDays,
+        createdDate: new Date(), // Track the creation date of the task
+        completed: false, 
+        subtasks: [] // Initialize with an empty subtasks array
+      });
+      setAction('');
+      setTime('');
+      setLocation('');
+      setRepeatDays(1); // Reset to default
     }
   };
 
@@ -19,42 +59,49 @@ const TaskForm = ({ addTask }) => {
     <div className="task-form-container">
       <form onSubmit={handleSubmit} className="task-form">
         <div>
-          <label htmlFor="task">Task</label>
+          <label htmlFor="action">Today, I will</label>
           <input
             type="text"
-            id="task"
-            value={task}
-            onChange={(e) => setTask(e.target.value)}
-            placeholder="Enter task description"
+            id="action"
+            value={action}
+            onChange={(e) => setAction(e.target.value)}
+            placeholder={actionPlaceholder}
           />
         </div>
         <div>
-          <label htmlFor="category">Category</label>
+          <label htmlFor="time">At what time?</label>
+          <input
+            type="time"
+            id="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="location">Where?</label>
+          <input
+            type="text"
+            id="location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder={locationPlaceholder}
+          />
+        </div>
+        <div>
+          <label htmlFor="repeatDays">Repeat for</label>
           <select
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            id="repeatDays"
+            value={repeatDays}
+            onChange={(e) => setRepeatDays(parseInt(e.target.value))}
           >
-            <option value="" disabled>
-              Select a category
-            </option>
-            <option value="Work">Work</option>
-            <option value="Personal">Personal</option>
-            <option value="Study">Study</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Others">Others</option>
+            {[...Array(30).keys()].map((day) => (
+              <option key={day + 1} value={day + 1}>
+                {day + 1} {day === 0 ? 'day' : 'days'}
+              </option>
+            ))}
           </select>
         </div>
-        <div>
-          <label htmlFor="deadline">Deadline</label>
-          <input
-            type="datetime-local"
-            id="deadline"
-            value={deadline}
-            onChange={(e) => setDeadline(e.target.value)}
-          />
-        </div>
-        <button type="submit">Add Task</button>
+        <button type="submit">Set Goal</button>
       </form>
     </div>
   );

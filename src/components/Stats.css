@@ -1,0 +1,66 @@
+.stat-container {
+  margin-bottom: 50px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  transition: background-color 0.3s;
+}
+
+.stat-item:hover {
+  background-color: #e0e0e0;
+}
+
+body.dark .stat-item {
+  background-color: #333;
+}
+
+.chart-container {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  margin-bottom: 50px;
+}
+
+.chart-container .column {
+  --aspect-ratio: 4 / 3;
+  margin: 1.5rem auto;
+  transform: skewY(15deg);
+}
+
+.chart-container .column th {
+  color: #007bff;
+}
+
+.chart-container .column thead th {
+  padding: 0.5rem;
+  background-color: #f0f0f0;
+}
+
+.chart-container .column tbody td {
+  margin-inline-start: 5px;
+  margin-inline-end: 10px;
+  box-shadow:
+    1px -1px 1px lightgrey,
+    2px -2px 1px lightgrey,
+    3px -3px 1px lightgrey,
+    4px -4px 1px lightgrey,
+    5px -5px 1px lightgrey,
+    6px -6px 1px lightgrey,
+    7px -7px 1px lightgrey,
+    8px -8px 1px lightgrey,
+    9px -9px 1px lightgrey,
+    10px -10px 1px lightgrey;
+  transform-origin: bottom;
+  animation: revealing-bars 2s linear;
+}
+
+@keyframes revealing-bars {
+  0%  { transform: scaleY( 0 ); }
+  30% { transform: scaleY( 1 ); }
+}
+

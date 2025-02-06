@@ -1,25 +1,19 @@
 import React from 'react';
 
-const Filter = ({ filter, setFilter }) => {
+const Filter = ({ filter, setFilter, completedCount, pendingCount }) => {
   return (
     <div className="filter-buttons">
       <button
-        className={filter === 'All' ? 'active' : ''}
-        onClick={() => setFilter('All')}
+        className={filter === 'Pending' ? 'active' : ''}
+        onClick={() => setFilter('Pending')}
       >
-        All
+        Pending <sup>{pendingCount}</sup>
       </button>
       <button
         className={filter === 'Completed' ? 'active' : ''}
         onClick={() => setFilter('Completed')}
       >
-        Completed
-      </button>
-      <button
-        className={filter === 'Pending' ? 'active' : ''}
-        onClick={() => setFilter('Pending')}
-      >
-        Pending
+        Accomplished <sup>{completedCount}</sup>
       </button>
     </div>
   );
