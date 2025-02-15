@@ -17,7 +17,7 @@ const BottomNav = () => {
             <NavLink to="/achievements" className="nav-item" title="Achievements">
                 <FaTrophy />
             </NavLink>
-            <NavLink to="/extra" className="nav-item" title="More">
+            <NavLink to="/extras" className="nav-item" title="More">
                 <FaEllipsisH />
             </NavLink>
         </nav>

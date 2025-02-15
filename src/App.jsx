@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TaskForm from './components/TaskForm';
 import Stats from "./components/Stats";
 import Achievements from "./components/Achievements";
+import Extras from './components/Extras';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfUse from './components/TermsOfUse';
 import LoadingScreen from './components/LoadingScreen';
 import ErrorBoundary from './components/ErrorBoundary';
 import { FaMoon, FaSun } from 'react-icons/fa';
@@ -498,6 +501,9 @@ const App = () => {
                 highestStreak={parseInt(localStorage.getItem("highestStreak")) || 0} 
               />}
             />
+            <Route path="/extras" element={<Extras />} />
+            <Route path="/extras/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/extras/terms-of-use" element={<TermsOfUse />} />
             <Route
               path="/"
               element={
