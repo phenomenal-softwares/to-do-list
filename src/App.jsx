@@ -478,9 +478,7 @@ const App = () => {
             <span className="streak-icon">🔥</span>
             <span className="streak-number">{localStorage.getItem("currentStreak") || 0}</span>
           </div>
-
-
-          <div className="header-buttons">
+          <div className="theme-toggle-container">
             <button className="theme-toggle" onClick={toggleTheme} title="Toggle theme">
               {theme === 'light' ? <FaMoon /> : <FaSun />}
             </button>
