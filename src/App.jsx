@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TaskForm from './components/TaskForm';
 import Stats from "./components/Stats";
+import Achievements from "./components/Achievements";
 import LoadingScreen from './components/LoadingScreen';
 import ErrorBoundary from './components/ErrorBoundary';
 import { FaMoon, FaSun } from 'react-icons/fa';
@@ -64,6 +65,14 @@ const App = () => {
       // Calculate daily stats
       const totalGoalsSet = tasks.length;
       const totalGoalsAchieved = tasks.filter((task) => task.completed).length;
+
+      // Check if "Perfect Day" is already unlocked
+      const perfectDayUnlocked = localStorage.getItem("perfectDay") === "true";
+
+     // If condition is met and it hasn't been unlocked before, unlock it
+      if (!perfectDayUnlocked && totalGoalsSet > 0 && totalGoalsSet === totalGoalsAchieved) {
+        localStorage.setItem("perfectDay", "true");
+      }
     
       // Retrieve existing stats from localStorage
       const existingTotalGoalsSet = parseInt(localStorage.getItem("totalGoalsSet")) || 0;
@@ -245,7 +254,11 @@ const App = () => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === taskId
-          ? { ...task, completed: !task.completed }
+          ? {
+              ...task,
+              completed: !task.completed,
+              completedAt: !task.completed ? new Date().toISOString() : null, // Save timestamp only when marking complete
+            }
           : task
       )
     );
@@ -253,7 +266,6 @@ const App = () => {
     // Find the toggled task
     const toggledTask = tasks.find((task) => task.id === taskId);
   
-    // Set the alert based on the new completion state
     if (toggledTask) {
       const newCompletionState = !toggledTask.completed;
       const message = newCompletionState
@@ -261,10 +273,41 @@ const App = () => {
         : `Goal "${toggledTask.task}" marked as pending.`;
   
       setAlert({ message, show: true });
-      // Auto-dismiss the alert after 3 seconds
       setTimeout(() => setAlert({ message: "", show: false }), 3000);
+  
+      if (newCompletionState) {
+        const completedHour = new Date().getHours();
+  
+        // 🎯 Check for Early Bird and Night Owl
+        if (completedHour < 8) {
+          localStorage.setItem("earlyBird", "true");
+        }
+        if (completedHour >= 22) {
+          localStorage.setItem("nightOwl", "true");
+        }
+  
+        // 🎯 Check for Last-Minute Hero
+        if (toggledTask.time) {
+          const deadline = new Date();
+          const [hours, minutes] = toggledTask.time.split(":").map(Number);
+          deadline.setHours(hours, minutes, 0, 0);
+  
+          const now = new Date();
+          const timeRemaining = (deadline - now) / 60000; // Convert to minutes
+  
+          if (timeRemaining > 0 && timeRemaining <= 10) {
+            localStorage.setItem("lastMinuteHero", "true");
+          }
+        }
+
+         // 🎯 Minimalist Achievement
+          const activeGoals = tasks.filter((task) => !task.completed).length;
+          if (activeGoals === 1) {
+            localStorage.setItem("minimalist", "true");
+          }
+      }
     }
-  };
+  };  
   
   const addSubtask = (taskId, subtaskName) => {
     setTasks((prevTasks) =>
@@ -405,6 +448,19 @@ const App = () => {
     document.body.className = newTheme;
   };
 
+  // Determine Rank based on totalGoalsAchieved
+  const getUserRank = () => {
+    const totalGoalsAchieved = parseInt(localStorage.getItem("totalGoalsAchieved")) || 0;
+    if (totalGoalsAchieved >= 1000) return "🦄 Mythic Overlord";
+    if (totalGoalsAchieved >= 500) return "👑 Eternal Conqueror";
+    if (totalGoalsAchieved >= 200) return "🔱 Titan";
+    if (totalGoalsAchieved >= 100) return "🏛️ Centurion";
+    if (totalGoalsAchieved >= 50) return "🎖 Elite";
+    if (totalGoalsAchieved >= 20) return "🛡️ Knight of Triumph";
+    if (totalGoalsAchieved >= 10) return "⚔️ Novice Hero";
+    return "🏹 Apprentice"; // Default rank for <10 goals
+  };
+
   if (isLoading) return <LoadingScreen />;
 
   return (
@@ -415,6 +471,15 @@ const App = () => {
             <h1>Priorify</h1>
             <small>Tomorrow is a scam. I'll do it today.</small>
           </div>
+          <div className="rank-icon">
+            {getUserRank().split(" ")[0]}
+          </div>
+          <div className="streak">
+            <span className="streak-icon">🔥</span>
+            <span className="streak-number">{localStorage.getItem("currentStreak") || 0}</span>
+          </div>
+
+
           <div className="header-buttons">
             <button className="theme-toggle" onClick={toggleTheme} title="Toggle theme">
               {theme === 'light' ? <FaMoon /> : <FaSun />}
@@ -426,6 +491,15 @@ const App = () => {
           <Routes>
             <Route path="/task-form" element={<TaskForm addTask={addTask} />} />
             <Route path="/stats" element={<Stats tasks={tasks} />} />
+            <Route 
+              path="/achievements" 
+              element={<Achievements
+                tasks={tasks}
+                totalGoalsAchieved={parseInt(localStorage.getItem("totalGoalsAchieved")) || 0}
+                goalsAchievedToday={tasks.filter(task => task.completed).length} 
+                highestStreak={parseInt(localStorage.getItem("highestStreak")) || 0} 
+              />}
+            />
             <Route
               path="/"
               element={

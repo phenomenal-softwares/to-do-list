@@ -1,0 +1,72 @@
+cd "C:\MyCoding\todo-list-app"
+yarn start
+
+
+First Step – Complete your first goal.
+On a Roll – Complete 3 goals in a single day.
+Goal Crusher – Complete 5+ goals in a day.
+Perfect Day – Complete all goals for a day.
+Consistency is Key – Complete at least 1 goal for 3 consecutive days.
+5-Day Streak – Complete at least 1 goal for 5 days straight.
+Week of Wins – Achieve a 7-day streak.
+Two-Week Warrior – Maintain a 14-day streak.
+Habit Builder – Maintain a 30-day streak.
+Unstoppable – Maintain a 100-day streak.
+
+** – Complete 10 goals.
+** – Complete 20 goals.
+** – Complete 50 goals.
+Centurion – Complete 100 goals.
+** - Complete 200 goals
+** – Complete 500 goals.
+** – Complete 1000 goals.
+
+Early Bird – Complete a goal before 8 AM.
+Night Owl – Complete a goal after 10 PM.
+Last-Minute Hero – Complete a goal within 10 minutes of its deadline.
+Weekend Warrior – Complete goals on both Saturday and Sunday.
+No Days Off – Complete a goal every day for a full month.
+Goal Collector – Have 10+ active goals at once.
+Minimalist – Keep only 1 active goal at a time and complete it.
+
+"Weekend Warrior – Complete goals on both Saturday and Sunday"
+In Achievements.jsx, write a rule for the achievement above in this format:
+    { id: "perfect_day", title: "Perfect Day", condition: "Complete all goals for a day", check: () => localStorage.getItem("perfectDay") === "true" },
+
+
+There's a logic in App.jsx handling weekly stats. We'll just have to retrieve existing weekly stats data and see if it includes Saturday and Sunday in days and check if goals achieved on each day are greater than 0.
+
+// Update weekly stats in localStorage
+      const day = now.toLocaleString('en-US', { weekday: 'narrow' }); // e.g., "Mon"
+      const dateKey = now.toISOString().split('T')[0]; // e.g., "2023-10-15"
+    
+      // Retrieve existing weekly stats from localStorage
+      const weeklyStats = JSON.parse(localStorage.getItem("weeklyStats")) || [];
+    
+      // Generate the last 7 days (including today)
+      const last7Days = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date(now);
+        date.setDate(now.getDate() - (6 - i)); // Previous 6 days + today
+        return {
+          day: date.toLocaleString('en-US', { weekday: 'narrow' }), // e.g., "Mon"
+          date: date.toISOString().split('T')[0], // e.g., "2023-10-15"
+          goalsAchieved: 0, // Default value
+        };
+      });
+    
+      // Merge existing stats with the last 7 days
+      last7Days.forEach((dayData) => {
+        const existingDayData = weeklyStats.find((stat) => stat.date === dayData.date);
+        if (existingDayData) {
+          dayData.goalsAchieved = existingDayData.goalsAchieved; // Use existing data if available
+        }
+      });
+    
+      // Add/update today's stats
+      const todayStatsIndex = last7Days.findIndex((stat) => stat.date === dateKey);
+      if (todayStatsIndex !== -1) {
+        last7Days[todayStatsIndex].goalsAchieved = totalGoalsAchieved;
+      }
+    
+      // Save updated weekly stats to localStorage
+      localStorage.setItem("weeklyStats", JSON.stringify(last7Days));

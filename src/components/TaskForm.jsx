@@ -56,7 +56,7 @@ const TaskForm = ({ addTask }) => {
   };
 
   return (
-    <div className="task-form-container">
+    <div className="task-form-container fade-in">
       <form onSubmit={handleSubmit} className="task-form">
         <div>
           <label htmlFor="action">Today, I will</label>

@@ -15,6 +15,8 @@ const Stats = ({
   currentStreak = parseInt(localStorage.getItem("currentStreak")) || 0,
   highestStreak = parseInt(localStorage.getItem("highestStreak")) || 0,
   mostGoalsAchieved = parseInt(localStorage.getItem("mostGoalsAchieved")) || 0,
+  // Get unlocked achievements from localStorage
+  unlockedAchievements = JSON.parse(localStorage.getItem("unlockedAchievements")) || [],
 }) => {
   const now = new Date();
   const currentDay = now.toLocaleString('en-US', { weekday: 'narrow' });
@@ -54,19 +56,24 @@ const Stats = ({
   // Find the maximum value for scaling the chart
   const maxValue = Math.max(...weeklyStats.map((s) => s.goalsAchieved), 1); // Ensure maxValue is at least 1
 
-  // Handler for task completion toggling
-  const handleTaskToggle = (taskId) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === taskId ? { ...task, completed: !task.completed } : task
-    );
-    const newGoalsAchievedToday = updatedTasks.filter((task) => task.completed).length;
-    setGoalsAchievedToday(newGoalsAchievedToday);
+  // Determine Rank based on totalGoalsAchieved
+  const getUserRank = () => {
+    if (totalGoalsAchieved >= 1000) return "🦄 Mythic Overlord";
+    if (totalGoalsAchieved >= 500) return "👑 Eternal Conqueror";
+    if (totalGoalsAchieved >= 200) return "🔱 Titan";
+    if (totalGoalsAchieved >= 100) return "🏛️ Centurion";
+    if (totalGoalsAchieved >= 50) return "🎖 Elite";
+    if (totalGoalsAchieved >= 20) return "🛡️ Knight of Triumph";
+    if (totalGoalsAchieved >= 10) return "⚔️ Novice Hero";
+    return "🏹 Apprentice"; // Default rank for <10 goals
   };
+
 
   return (
     <div className="stats">
+      <h3>Goals Stats</h3>
       <div className="chart-container">
-        <h4>Goals achieved this week</h4>
+        <h5>Goals achieved this week</h5>
         <table className="charts-css column show-labels show-2-secondary-axes">
           <caption>Weekly Goals Achieved</caption>
           <thead>
@@ -90,7 +97,10 @@ const Stats = ({
 
       {/* Existing Stats */}
     <div className="stat-container">
-      <h4>Goals stats</h4>
+    <div className="stat-item">
+        <span className="stat-title">Rank:</span>
+        <span className="stat-value">{getUserRank()}</span>
+      </div>
       <div className="stat-item">
         <span className="stat-title">Goals Set Today:</span>
         <span className="stat-value">{goalsSetToday}</span>
@@ -100,15 +110,15 @@ const Stats = ({
         <span className="stat-value">{goalsAchievedToday}</span>
       </div>
       <div className="stat-item">
-        <span className="stat-title">Total Goals Set:</span>
+        <span className="stat-title">All-time Goals Set:</span>
         <span className="stat-value">{totalGoalsSet}</span>
       </div>
       <div className="stat-item">
-        <span className="stat-title">Total Goals Achieved:</span>
+        <span className="stat-title">All-time Goals Achieved:</span>
         <span className="stat-value">{existingTotalGoalsAchieved + goalsAchievedToday}</span>
       </div>
       <div className="stat-item">
-        <span className="stat-title">Total Goals Missed:</span>
+        <span className="stat-title">All-time Goals Missed:</span>
         <span className="stat-value">{totalGoalsMissed}</span>
       </div>
       <div className="stat-item">
@@ -130,6 +140,10 @@ const Stats = ({
       <div className="stat-item">
         <span className="stat-title">Most Goals Achieved in a Day:</span>
         <span className="stat-value">{mostGoalsAchieved}</span>
+      </div>
+      <div className="stat-item">
+        <span className="stat-title">Achievements Unlocked:</span>
+        <span className="stat-value"> {unlockedAchievements.length} / 16</span>
       </div>
     </div>
   </div>

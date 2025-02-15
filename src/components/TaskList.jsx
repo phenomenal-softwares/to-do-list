@@ -73,7 +73,7 @@ const TaskList = ({
   };
 
   return (
-    <div>
+    <div className='fade-in'>
       <div className="task-list-header">
         <h2>Today,</h2>
         <button className="sort-button" onClick={toggleSortOrder}>
@@ -83,12 +83,12 @@ const TaskList = ({
 
       {filteredTasks.length === 0 ? (
         <p className="no-tasks-message">
-          "What goals do you want to achieve today? You can do it!" <br /> - Your Future Self
+          "Good habits make time your ally. Bad habits make time your enemy" <br /> - James Clear
         </p>
       ) : (
         <ul className={`task-list ${theme}`}>
           {filteredTasks.map((task) => (
-            <li key={task.id} className="task-item">
+            <li key={task.id} className="task-item fade-in">
               <div className="main-task">
                 <input
                   type="checkbox"

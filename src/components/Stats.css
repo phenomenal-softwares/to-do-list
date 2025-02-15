@@ -1,5 +1,17 @@
+.stats {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.stats h3 {
+  text-align: center;
+}
+
 .stat-container {
   margin-bottom: 50px;
+  width: 100vw;
+  max-width: 400px;
 }
 
 .stat-item {
@@ -24,6 +36,15 @@ body.dark .stat-item {
   max-width: 300px;
   margin: 0 auto;
   margin-bottom: 50px;
+  display: grid;
+  grid-template-columns: 10% 90%;
+  gap: 1rem;
+}
+
+.chart-container h5 {
+  transform: skewY(-15deg);
+  color: #007bff;
+  margin-left: -15px;
 }
 
 .chart-container .column {

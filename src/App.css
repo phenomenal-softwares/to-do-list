@@ -2,7 +2,11 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  background-color: #ADD8E6;
   transition: background-color 0.5s, color 0.5s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .container {
@@ -49,10 +53,26 @@ ul.task-list.dark {
 
 /* Header Styling */
 .header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  width: 92%; /* Ensure it fits inside the container */
+  max-width: 400px;
+  background-color: #ffffff;
+  padding: 10px 5px;
+  border-bottom: 1px solid #ddd;
+  border-radius: 0 0 10px 10px; /* Rounded corners on bottom */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+}
+
+body.dark .header {
+  background-color: #333;
 }
 
 .header-text {
@@ -64,20 +84,39 @@ ul.task-list.dark {
 
 .header-text h1 {
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
 }
 
 .header-text small {
-  font-size: 0.6rem;
+  font-size: 0.4rem;
 }
 
-.header-buttons {
-  display: flex;
-  gap: 10px;
+.rank-icon {
+  font-size: 2.0rem; /* Bigger icon */
+  font-weight: bold;
 }
+
+/* Streak Styling */
+
+.streak {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.streak-icon {
+  font-size: 1.8rem; /* Icon size */
+}
+
+.streak-number {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-left: -5px; /* Slightly adjust position */
+}
+
 
 /* Theme Toggle Button */
-.theme-toggle, .menu-toggle {
+.theme-toggle {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -89,7 +128,7 @@ ul.task-list.dark {
   transition: color 0.3s;
 }
 
-.theme-toggle:hover, .menu-toggle:hover {
+.theme-toggle:hover {
   color: #007bff;
 }
 
@@ -97,7 +136,7 @@ ul.task-list.dark {
 .filter-buttons {
   display: flex;
   justify-content: space-around;
-  margin: 20px 0;
+  margin-top: 50px;
   gap: 10px;
 }
 
@@ -313,8 +352,9 @@ li span.completed {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  width: 100vw;
   max-width: 400px;
-  margin: 0 auto;
+  margin-top: 50px;
 }
 
 .task-form div {
@@ -408,6 +448,19 @@ body.dark .bottom-nav {
   transform: scale(1.1);
 }
 
+.fade-in {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+  
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {

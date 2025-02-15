@@ -13,7 +13,7 @@ const Filter = ({ filter, setFilter, completedCount, pendingCount }) => {
         className={filter === 'Completed' ? 'active' : ''}
         onClick={() => setFilter('Completed')}
       >
-        Accomplished <sup>{completedCount}</sup>
+        Completed <sup>{completedCount}</sup>
       </button>
     </div>
   );
