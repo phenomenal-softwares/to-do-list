@@ -91,25 +91,14 @@ const App = () => {
       // Update streaks
       let updatedCurrentStreak = existingCurrentStreak;
       let updatedHighestStreak = existingHighestStreak;
-
-      // Get the previous day's date
-      const previousDate = new Date(now);
-      previousDate.setDate(now.getDate() - 1);
-      const previousDateKey = previousDate.toISOString().split('T')[0]; // e.g., "2023-10-14"
-
-      // Find the previous day's stats
-      const previousDayStats = weeklyStats.find((stat) => stat.date === previousDateKey);
-
-      // Check if the previous day's goalsAchieved is zero
-      if (previousDayStats && previousDayStats.goalsAchieved === 0) {
-        updatedCurrentStreak = 0; // Reset streak if no goals were achieved the previous day
-      } else if (totalGoalsAchieved > 0) {
-        updatedCurrentStreak += 1; // Increase streak if goals were achieved today
+    
+      if (totalGoalsAchieved > 0) {
+        updatedCurrentStreak += 1; // Increase streak if goals were achieved
         if (updatedCurrentStreak > updatedHighestStreak) {
           updatedHighestStreak = updatedCurrentStreak; // Update highest streak if current streak exceeds it
         }
       } else {
-        updatedCurrentStreak = 0; // Reset streak if no goals were achieved today
+        updatedCurrentStreak = 0; // Reset streak if no goals were achieved
       }
     
       // Update most goals achieved in a day
